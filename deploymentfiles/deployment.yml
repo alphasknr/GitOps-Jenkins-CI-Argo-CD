@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: mc-app
-        image: krupa/gitopscicd:17
+        image: krupaawsdocker/gitopscicd:17
         ports:
         - containerPort: 8080
 
