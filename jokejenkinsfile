@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+
+
+       tools {
+        maven 'maven3.9.9'
+    }
+
+    stages {
+      stage('checkout') {
+            steps {
+                echo 'Cloning GIT HUB Repo '
+				git branch: 'main', url: 'https://github.com/alphasknr/GitOps-Jenkins-CI-Argo-CD.git'
+            }  
+        }
+		
+		
+		
+	 stage('sonar') {
+            steps {
+                echo 'scanning project'
+                sh 'ls -ltr'
+                
+                sh ''' mvn sonar:sonar \\
+                      -Dsonar.host.url=http://34.30.177.141:9000 \\
+                      -Dsonar.login=squ_845e41bbe528e6dd4b7899974084322a676e49e3'''
+            }
+    	}
+		
+		
+		
+        stage('Build Artifact') {
+            steps {
+                echo 'Build Artifact'
+				sh 'mvn clean package'
+            }
+        }
+		
+		
+		
+        stage('Docker Image') {
+            steps {
+                echo 'Docker Image building'
+				sh 'docker build -t krupaawsdocker/gitopscicd:${BUILD_NUMBER} .'
+				sh 'docker ps -a'
+            }
+        }
+		
+		
+       stage('Push to Dockerhub') {
+            steps {
+			 script {
+			 withCredentials([string(credentialsId: 'dockerPasswordID', variable: 'dockerhubpassword')])
+			{
+            sh 'docker login -u krupaawsdocker -p ${dockerhubpassword}'
+			
+			 }
+			   sh 'docker push krupaawsdocker/gitopscicd:${BUILD_NUMBER}'
+			   
+           
+				}
+				
+            }
+        }
+		
+		
+    stage('Update Deployment File') {
+		
+		 environment {
+            GIT_REPO_NAME = "GitOps-Jenkins-CI-Argo-CD"
+            GIT_USER_NAME = "alphasknr"
+        }
+		
+            steps {
+                echo 'Update Deployment File'
+				withCredentials([string(credentialsId: 'GithubTokenID', variable: 'githubtoken')]) 
+				{
+                  sh '''
+                    git config user.email "krupasknr@gmail.com"
+                    git config user.name "krupasknr"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/cicd:.*/cicd:${BUILD_NUMBER}/g" deploymentfiles/deployment.yml
+                    git add .
+                    
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+
+                    git push https://${githubtoken}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+				  
+                 }
+				
+            }
+        }
+		
+		
+			
+    }
+
+}
