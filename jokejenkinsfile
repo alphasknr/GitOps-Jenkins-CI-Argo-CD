@@ -20,11 +20,11 @@ pipeline {
             steps {
                 echo 'scanning project'
                 sh 'ls -ltr'
-                
+                withCredentials([string(credentialsId: 'SonarTokenID', variable: 'sonartoken')]){
                 sh ''' mvn sonar:sonar \\
-                      -Dsonar.host.url=http://34.30.177.141:9000 \\
-                      -Dsonar.login=squ_845e41bbe528e6dd4b7899974084322a676e49e3'''
-            }
+                      -Dsonar.host.url=http://34.71.51.58:9000 \\
+                      -Dsonar.login=sonartoken'''
+            }}
     	}
 		
 		
