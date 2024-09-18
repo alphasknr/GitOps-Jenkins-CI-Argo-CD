@@ -7,6 +7,8 @@
 - **Containerization & Orchestration:** Docker, Kubernetes, Kubectl  
 - **Languages/Frameworks:** Java, Maven
 
+  ![Alt text](GitOps-Jenkins-ArgoCD.webp)
+
 ---
 
 ## **Project Overview**
@@ -68,7 +70,7 @@ This project demonstrates the development and deployment of a complete CI/CD pip
 - Fully automated CI/CD process from code commit to deployment on a Kubernetes cluster.
 - Continuous monitoring and quality checks using SonarQube.
 - Seamless container orchestration with Kubernetes and automated GitOps-based deployments via ArgoCD.
-
+![Alt text](joke-applicaiton.png)
 ---
 
 ## **Useful Links**
