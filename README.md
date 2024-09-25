@@ -122,11 +122,14 @@ sudo apt-get install apt-transport-https ca-certificates gnupg curl
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
 echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 sudo apt-get update && sudo apt-get install google-cloud-cli
-#Login to GCloud
-glcoud auth login
+```
+
+```bash
 #Install gcloud-auth plugin
 sudo apt-get install google-cloud-cli-gke-gcloud-auth-plugin
-#connect cluster
+#Login to GCloud
+glcoud auth login
+#connect to the cluster
 gcloud container clusters get-credentials app-cluster --zone us-central1-c --project sincere-charmer-431710-v6
 ```
 
